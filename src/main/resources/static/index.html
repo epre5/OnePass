@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        h2 {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>OnePassWord</h2>
+    <input type="text" id="corePass" placeholder="Enter CorePass, remember it!">
+    <input type="text" id="idCode" placeholder="Enter IDCode, like qq,wechat,etc.">
+    <button onclick="generatePassword()">Generate Password</button>
+    <p id="result"></p>
+</div>
+<script>
+    async function generatePassword() {
+        let corePass = document.getElementById('corePass').value;
+        let idCode = document.getElementById('idCode').value;
+
+        let response = await fetch('api/getPassword', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ corePass, idCode }),
+        });
+
+        let password = await response.text();
+        document.getElementById('result').textContent = 'Generated Password: ' + password;
+    }
+</script>
+</body>
+</html>
