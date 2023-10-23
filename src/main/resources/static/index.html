@@ -14,12 +14,14 @@
             height: 100vh;
             background-color: #f4f4f4;
         }
+
         .container {
             background-color: #fff;
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         input, button {
             padding: 10px;
             margin: 5px 0;
@@ -27,19 +29,35 @@
             border: 1px solid #ddd;
             border-radius: 3px;
         }
+
         h2 {
             margin-bottom: 15px;
             text-align: center;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .button-container button {
+            width: 48%; /* To account for the space between them */
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <h2>OnePassWord</h2>
-    <input type="text" id="corePass" placeholder="Enter CorePass, remember it!">
-    <input type="text" id="idCode" placeholder="Enter IDCode, like qq,wechat,etc.">
-    <button onclick="generatePassword()">Generate Password</button>
+    <h2>一个密码</h2>
+    <input type="text" id="corePass" placeholder="请输入核心密码，所有的密码都由它生成，你需要记住它！">
+    <input type="text" id="idCode" placeholder="请输入特征码，用于区分不同的应用，比如qq、wechat等。">
+
+    <div class="button-container">
+        <button onclick="generatePassword()">生成密码</button>
+        <button onclick="resetInputs()">重置</button>
+    </div>
+
     <p id="result"></p>
+    <button id="copy" onclick="copyToClipboard()" style="display: none">点击复制密码</button>
 </div>
 <script>
     async function generatePassword() {
@@ -51,11 +69,29 @@
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ corePass, idCode }),
+            body: JSON.stringify({corePass, idCode}),
         });
 
         let password = await response.text();
-        document.getElementById('result').textContent = 'Generated Password: ' + password;
+        document.getElementById('result').textContent = password;
+        document.getElementById('copy').style.display = 'block';
+    }
+
+    function resetInputs() {
+        document.getElementById('corePass').value = '';
+        document.getElementById('idCode').value = '';
+        document.getElementById('result').textContent = '';
+    }
+
+    function copyToClipboard() {
+        let passwordText = document.getElementById('result').textContent;
+        let textarea = document.createElement("textarea");
+        textarea.value = passwordText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        alert("密码已复制到剪贴板！");
     }
 </script>
 </body>
