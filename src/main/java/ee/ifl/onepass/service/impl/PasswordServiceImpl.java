@@ -3,14 +3,16 @@ package ee.ifl.onepass.service.impl;
 import ee.ifl.onepass.service.PasswordService;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.Random;
 
 @Service
 public class PasswordServiceImpl implements PasswordService {
     public String SimpleHash(String input1, String input2) {
         long hash = (input1 + input2).hashCode();
-        Random rand = new Random(hash);
-
+        SecureRandom rand = new SecureRandom();
+        rand.setSeed(hash);
+//        Random rand = new Random(hash);
         StringBuilder sb = new StringBuilder();
         sb.append((char) ('A' + rand.nextInt(26)));
         sb.append((char) ('a' + rand.nextInt(26)));
